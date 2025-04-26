@@ -190,7 +190,7 @@
       const password = prompt('Enter new password:');
       if (username && password) {
         const newUser = {
-          id: users.length + 1,
+          id: users.length ? users[users.length - 1].id + 1 : 1,
           username: username,
           password: password
         };
