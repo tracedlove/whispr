@@ -304,9 +304,9 @@
         const storedHash = localStorage.getItem('user_' + username);
         if (storedHash === hashedPassword) {
           if (username === 'admin' && password === 'gta!564dsn$23k') {
-            window.location.href = 'admin.html';
+            window.location.href = 'admin';
           } else {
-            window.location.href = 'dashboard.html';
+            window.location.href = 'dashboard';
           }
         } else {
           alert('Invalid credentials!');
