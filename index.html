@@ -302,7 +302,7 @@
       } else {
         const storedHash = localStorage.getItem('user_' + username);
         if (storedHash === hashedPassword) {
-          window.location.href = 'dashboard.html';
+          window.location.href = 'dashboard';
         } else {
           alert('Invalid credentials!');
         }
