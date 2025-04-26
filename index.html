@@ -302,15 +302,7 @@
       } else {
         const storedHash = localStorage.getItem('user_' + username);
         if (storedHash === hashedPassword) {
-          // Load dashboard.html dynamically after login
-          fetch('dashboard.html')
-            .then(response => response.text())
-            .then(data => {
-              document.body.innerHTML = data; // Replace the body content with dashboard.html
-            })
-            .catch(error => {
-              console.error('Error loading dashboard:', error);
-            });
+          window.location.href = 'dashboard.html';
         } else {
           alert('Invalid credentials!');
         }
