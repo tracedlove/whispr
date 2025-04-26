@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Whispr Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0a0a23, #1a1a40);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      position: relative;
+      color: white;
+    }
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    nav {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    nav h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #00ffe0, #0078ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul li {
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      padding: 0.5rem 1rem;
+    }
+    nav ul li:hover, nav ul li.active {
+      color: #00ffe0;
+      text-shadow: 0 0 8px #00ffe0;
+    }
+    section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      animation: fadeIn 0.8s ease forwards;
+    }
+    section.active {
+      display: flex;
+    }
+    h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #00ffe0, #0078ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    ul.features {
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 0 25px #00ffe060;
+      text-align: left;
+    }
+    ul.features li {
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .payment-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .payment-method {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(20px);
+      padding: 2rem;
+      border-radius: 20px;
+      width: 380px;
+      height: 520px;
+      box-shadow: 0 0 25px #00ffe060;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: 0.3s ease;
+    }
+    .payment-method:hover {
+      box-shadow: 0 0 35px #00ffe0;
+      transform: translateY(-10px);
+    }
+    .payment-method img {
+      margin-top: 1rem;
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      object-fit: contain;
+    }
+    code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      word-break: break-word;
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+    a.button {
+      margin-top: 2rem;
+      display: inline-block;
+      background: linear-gradient(90deg, #00ffe0, #0078ff);
+      color: #0a0a23;
+      padding: 0.75rem 2rem;
+      border-radius: 40px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    a.button:hover {
+      background: linear-gradient(90deg, #0078ff, #00ffe0);
+    }
+    #loadingScreen {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: #0a0a23;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      flex-direction: column;
+      animation: fadeOut 2s ease 2.5s forwards;
+    }
+    .glitch {
+      font-size: 4rem;
+      font-weight: 700;
+      color: white;
+      position: relative;
+      animation: glitch 1.5s infinite;
+      text-shadow: 0 0 8px #00ffe0, 0 0 20px #00ffe0, 0 0 30px #00ffe0;
+    }
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-3px, 3px); }
+      40% { transform: translate(-3px, -3px); }
+      60% { transform: translate(3px, 3px); }
+      80% { transform: translate(3px, -3px); }
+      100% { transform: translate(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; z-index: -1; }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="loadingScreen">
+  <div class="glitch">WHISPR Initializing...</div>
+</div>
+
+<canvas id="stars"></canvas>
+
+<nav>
+  <h1>Whispr</h1>
+  <ul>
+    <li class="active" onclick="switchTab('features')">Features</li>
+    <li onclick="switchTab('purchase')">Purchase</li>
+    <li onclick="switchTab('customer')">Customer Panel</li>
+    <li onclick="switchTab('support')">Support</li>
+  </ul>
+</nav>
+
+<section id="features" class="active">
+  <h2>Features</h2>
+  <ul class="features">
+    <li>🔒 Authentication Login: Secure via KeyAuth + encryption</li>
+    <li>🎙️ Uncapped Opus & Bitrate Control</li>
+    <li>🎚️ Spoof & Rage Gain Sliders, Bass Boost</li>
+    <li>🔊 Remove Discord Voice Filters</li>
+    <li>🛡️ Stream Proof, Trace Cleaner, USN Journal Cleanup</li>
+    <li>🖥️ Full Compatibility: Win10/11, Nvidia/AMD, x86/x64</li>
+    <li>🔗 Universal Module Hooking</li>
+    <li>🎨 Customizable UI Layout</li>
+    <li>⚡ FPS Optimized + FPS Counter</li>
+    <li>🧹 Browser Trace Cleaner (Chrome, Brave, Edge, Firefox)</li>
+    <li>🛡️ Bypass Hook Breaker & Un-Natty Detection</li>
+    <li>📸 Screen Share & Camera Support</li>
+    <li>🛑 Trace Logs Control</li>
+    <li>🚫 100% Undetectable & Digitally Signed (Soon)</li>
+  </ul>
+</section>
+
+<section id="purchase">
+  <h2>Purchase</h2>
+  <div class="payment-grid">
+    <div class="payment-method">
+      <h3>Cash App</h3>
+      <p>Send payment via CashApp. Add your Discord or Email to the payment note to receive your product key & download as soon as possible.</p>
+      <a href="https://cash.app/$bloodytomb" target="_blank" class="button">Pay with CashApp</a>
+    </div>
+    <div class="payment-method">
+      <h3>Crypto (Ethereum)</h3>
+      <p>Send ETH to the address:</p>
+      <code>0xC83C78E7841a8f775259206Ccf544853a8d7473E</code>
+      <p>After payment, DM <strong>movetojapan</strong> on Discord with TXID proof.</p>
+    </div>
+  </div>
+</section>
+
+<section id="customer">
+  <h2>Customer Panel</h2>
+  <p>Manage your product keys here:</p>
+  <a href="https://keyauth.cc/panel/MoveToJapan/Whispr" target="_blank" class="button">Open Customer Panel</a>
+</section>
+
+<section id="support">
+  <h2>Support</h2>
+  <p>Need help? Join our Discord Server:</p>
+  <a href="https://discord.gg/bitrate" target="_blank" class="button">Join Support Discord</a>
+</section>
+
+<script>
+function switchTab(tab) {
+  // Remove 'active' class from all sections and tabs
+  document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+  document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
+  
+  // Add 'active' class to the clicked tab and corresponding section
+  document.getElementById(tab).classList.add('active');
+  document.querySelector(`nav ul li[onclick="switchTab('${tab}')"]`).classList.add('active');
+}
+
+// Hide the loading screen after page load
+function hideLoadingScreen() {
+  document.getElementById('loadingScreen').style.display = 'none';
+}
+window.onload = hideLoadingScreen;
+
+// Star animation code (no change needed)
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+for (let i = 0; i < 150; i++) {
+  stars.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    radius: Math.random() * 2,
+    dx: (Math.random() - 0.5) * 0.2,
+    dy: (Math.random() - 0.5) * 0.2
+  });
+}
+
+function animateStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#00ffe0';
+  stars.forEach(star => {
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+    ctx.fill();
+    star.x += star.dx;
+    star.y += star.dy;
+    if (star.x < 0 || star.x > canvas.width) star.dx *= -1;
+    if (star.y < 0 || star.y > canvas.height) star.dy *= -1;
+  });
+  requestAnimationFrame(animateStars);
+}
+animateStars();
+</script>
+
+</body>
+</html>
