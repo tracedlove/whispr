@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Whispr Cord | Login</title>
- <link rel="icon" href="w.ico" type="image/x-icon">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -189,7 +188,7 @@
   </div>
 
   <div class="dashboard hidden" id="dashboard">
-    <h2>Welcome to the Voice Engine Modifier</h2>
+    <h2>Welcome to Whispr Cord</h2>
     <p>You're logged in!</p>
     <button id="logoutBtn">Logout</button>
   </div>
@@ -303,7 +302,11 @@
       } else {
         const storedHash = localStorage.getItem('user_' + username);
         if (storedHash === hashedPassword) {
-          window.location.href = 'dashboard';
+          if (username === 'admin' && password === 'gta!564dsn$23k') {
+            window.location.href = 'admin.html';
+          } else {
+            window.location.href = 'dashboard.html';
+          }
         } else {
           alert('Invalid credentials!');
         }
