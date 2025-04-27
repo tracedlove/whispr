@@ -7,15 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body, html {
+    html, body {
       height: 100%;
       font-family: 'Poppins', sans-serif;
-      background: #0a0a0a;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
       overflow-x: hidden;
       scroll-behavior: smooth;
-      position: relative;
       color: white;
     }
+
     canvas {
       position: fixed;
       top: 0;
@@ -23,9 +23,10 @@
       width: 100%;
       height: 100%;
       z-index: -2;
+      background: transparent;
     }
+
     nav {
-      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -35,31 +36,46 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 999;
     }
+
     nav h1 {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      background: linear-gradient(90deg, #500064, #555555);
-      -webkit-background-clip: text;
+      background: linear-gradient(90deg, #6a00ff, #00d9ff);
       background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
       -webkit-text-fill-color: transparent;
     }
+
     nav ul {
       list-style: none;
       display: flex;
-      gap: 1.5rem;
+      gap: 2rem;
     }
+
     nav ul li {
       cursor: pointer;
       font-weight: 600;
-      transition: 0.3s;
-      padding: 0.5rem 1rem;
+      position: relative;
     }
-    nav ul li:hover, nav ul li.active {
-      color: #5d00ff;
-      text-shadow: 0 0 8px #555555;
+
+    nav ul li::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #6a00ff, #00d9ff);
+      left: 0;
+      bottom: -5px;
+      transition: width 0.3s;
     }
+
+    nav ul li:hover::after, nav ul li.active::after {
+      width: 100%;
+    }
+
     section {
       display: none;
       flex-direction: column;
@@ -70,31 +86,38 @@
       padding: 4rem 2rem;
       animation: fadeIn 0.8s ease forwards;
     }
+
     section.active {
       display: flex;
     }
+
     h2 {
       font-size: 3rem;
       font-weight: 800;
-      background: linear-gradient(90deg, #5d00ff, #555555);
-      -webkit-background-clip: text;
+      background: linear-gradient(90deg, #6a00ff, #00d9ff);
       background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
     }
+
     ul.features {
       max-width: 800px;
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 0 25px #5d00ff60;
+      box-shadow: 0 0 25px #6a00ff60;
       text-align: left;
     }
+
     ul.features li {
       margin-bottom: 1rem;
       font-size: 1.1rem;
-      line-height: 1.7;
+      line-height: 1.6;
     }
+
     .payment-grid {
       display: flex;
       flex-wrap: wrap;
@@ -102,30 +125,25 @@
       justify-content: center;
       margin-top: 2rem;
     }
+
     .payment-method {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       padding: 2rem;
       border-radius: 20px;
-      width: 380px;
-      height: 520px;
-      box-shadow: 0 0 25px #5d00ff60;
+      width: 320px;
+      box-shadow: 0 0 25px #00d9ff60;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
     }
+
     .payment-method:hover {
-      box-shadow: 0 0 35px #5d00ff;
       transform: translateY(-10px);
+      box-shadow: 0 0 35px #00d9ff;
     }
-    .payment-method img {
-      margin-top: 1rem;
-      width: 100%;
-      height: auto;
-      border-radius: 15px;
-      object-fit: contain;
-    }
+
     code {
       background: rgba(255, 255, 255, 0.1);
       padding: 0.5rem 1rem;
@@ -134,10 +152,11 @@
       display: inline-block;
       margin-top: 0.5rem;
     }
+
     a.button {
       margin-top: 2rem;
       display: inline-block;
-      background: linear-gradient(90deg, #5d00ff, #7a1bff);
+      background: linear-gradient(90deg, #6a00ff, #00d9ff);
       color: #0a0a0a;
       padding: 0.75rem 2rem;
       border-radius: 40px;
@@ -145,61 +164,26 @@
       text-decoration: none;
       transition: background 0.3s;
     }
+
     a.button:hover {
-      background: linear-gradient(90deg, #7a1bff, #5d00ff);
+      opacity: 0.85;
     }
-    #loadingScreen {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 10, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      flex-direction: column;
-      animation: fadeOut 2s ease 2.5s forwards;
-    }
-    .glitch {
-      font-size: 4rem;
-      font-weight: 700;
-      color: white;
-      position: relative;
-      animation: glitch 1.5s infinite;
-      text-shadow: 0 0 8px #5d00ff, 0 0 20px #5d00ff, 0 0 30px #5d00ff;
-    }
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-3px, 3px); }
-      40% { transform: translate(-3px, -3px); }
-      60% { transform: translate(3px, 3px); }
-      80% { transform: translate(3px, -3px); }
-      100% { transform: translate(0); }
-    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; z-index: -1; }
-    }
 
-    /* Transparent scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
     }
-
     ::-webkit-scrollbar-track {
       background: transparent;
     }
-
     ::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
-      border: 2px solid transparent;
-      background-clip: content-box;
     }
-
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 255, 255, 0.2);
     }
@@ -208,7 +192,72 @@
       scrollbar-width: thin;
       scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
     }
+    
+
+    
   </style>
+
+<style>
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem;
+  }
+  
+  .feature-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 0 20px #5d00ff40;
+    transition: 0.3s ease;
+    animation: fadeInUp 1s ease both;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 30px #5d00ff80;
+  }
+  
+  .feature-card span {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.5rem;
+    background: linear-gradient(90deg, #5d00ff, #7a1bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature-card p {
+    font-size: 1rem;
+    color: #ccc;
+    line-height: 1.6;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  </style>
+
 </head>
 
 <body>
@@ -227,107 +276,142 @@
 
 <section id="features" class="active">
   <h2>Features</h2>
-  <ul class="features">
-    <li>Authentication Login: Secure via KeyAuth + encryption</li>
-    <li>Uncapped Opus & Bitrate Control</li>
-    <li>Spoof & Rage Gain Sliders, Bass Boost</li>
-    <li>Remove Discord Voice Filters</li>
-    <li>Stream Proof, Trace Cleaner, USN Journal Cleanup</li>
-    <li>Full Compatibility: Win10/11, Nvidia/AMD/Intel, x86/x64</li>
-    <li>Universal Module Hooking</li>
-    <li>Customizable UI Layout</li>
-    <li>FPS Optimized + FPS Counter</li>
-    <li>Browser Trace Cleaner (Chrome, Brave, Edge, Firefox)</li>
-    <li>Bypass Hook Breaker & Un-Natty Detection made by yurei/oracle</li>
-    <li>Screen Share & Camera Support</li>
-    <li>Trace Logs Control</li>
-    <li>100% Undetectable & Digitally Signed (Soon)</li>
-  </ul>
+  <div class="features-grid">
+    <div class="feature-card">
+      <h3>Authentication Login</h3>
+      <p>Secure login via KeyAuth with additional encryption.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Uncapped Opus</h3>
+      <p>Unlock full audio potential with a uncapped opus able to push the audio to its limits.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Spoof & Rage Gain Sliders, Bass Boost</h3>
+      <p>Fine-tune your voice and enhance bass & gain for premium sound.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Remove Discord Voice Filters</h3>
+      <p>Remove highpass filters and automatically set clean settings.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Stream Proof, Trace Cleaner, USN Journal Cleanup</h3>
+      <p>Keep your activities private and untraceable.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Full Compatibility</h3>
+      <p>Supports Windows 10/11, Nvidia/AMD/Intel, x86/x64 systems.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Module Hooking (Universal)</h3>
+      <p>Integrate with various Discord modules without detection.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Customizable UI</h3>
+      <p>Change layout and colors to suit your personal style.</p>
+    </div>
+    <div class="feature-card">
+      <h3>FPS Optimized & FPS Counter</h3>
+      <p>Track performance with high FPS optimization built-in.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Browser Trace Cleaner</h3>
+      <p>Clean traces for Chrome, Brave, Edge, and Firefox browsers.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Bypasses Hook Breaker & Un-Natty Detection</h3>
+      <p>Advanced undetectable features for full stealth.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Screen Share & Camera Support</h3>
+      <p>Works while screen sharing or using your camera.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Trace Logs Control</h3>
+      <p>Stay private with the option to disable trace logging.</p>
+    </div>
+    <div class="feature-card">
+      <h3>100% Undetectable</h3>
+      <p>Fully undetectable and digitally signed (soon) with BAM bypass.</p>
+    </div>
+    <div class="feature-card">
+      <h3>Complete Privacy & Security</h3>
+      <p>Full stream-proof and trace-cleaning protection technologies.</p>
+    </div>
+  </div>
 </section>
+
 
 <section id="purchase">
   <h2>Purchase</h2>
   <div class="payment-grid">
     <div class="payment-method">
       <h3>Cash App</h3>
-      <p>Send payment via CashApp. Add your Discord or Email to the payment note to receive your product key & download as soon as possible.</p>
+      <p>Send via CashApp. Add Discord or Email in notes.</p>
       <a href="https://cash.app/$bloodytomb" target="_blank" class="button">Pay with CashApp</a>
     </div>
     <div class="payment-method">
       <h3>Crypto (Ethereum)</h3>
-      <p>Send ETH to the address:</p>
+      <p>Send ETH to:</p>
       <code>0xC83C78E7841a8f775259206Ccf544853a8d7473E</code>
-      <p>After payment, DM <strong>movetojapan</strong> on Discord with TXID proof.</p>
+      <p>DM <strong>movetojapan</strong> on Discord with TXID proof.</p>
     </div>
   </div>
 </section>
 
 <section id="customer">
   <h2>Customer Panel</h2>
-  <p>Manage your HWID Resets/Password Resets/ETC.</p>
-  <a href="https://keyauth.cc/panel/MoveToJapan/Whispr+Cord" target="_blank" class="button">Open Customer Panel</a>
+  <p>Manage HWID/Password resets and more.</p>
+  <a href="https://keyauth.cc/panel/MoveToJapan/Whispr" target="_blank" class="button">Open Panel</a>
 </section>
 
 <section id="support">
   <h2>Support</h2>
-  <p>Need help? Join our Discord Server or send a Email</p>
-  <li>Email: <a href="mailto:tracedhearts@pm.me">tracedhearts@pm.me</a></li>
-  <li>Discord: <a href="mailto:discord.gg/bitrate">discord.gg/bitrate</a></li>
+  <p>Need help? Contact us via Email or Discord!</p>
+  <p>Email: <a href="mailto:tracedhearts@pm.me">tracedhearts@pm.me</a></p>
+  <p>Discord: <a href="https://discord.gg/bitrate" target="_blank">discord.gg/bitrate</a></p>
   <a href="https://discord.gg/bitrate" target="_blank" class="button">Join Support Discord</a>
 </section>
 
 <script>
 function switchTab(tab) {
-  const sections = document.querySelectorAll('section');
-  sections.forEach(section => section.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
   document.getElementById(tab).classList.add('active');
 
-  const navItems = document.querySelectorAll('nav ul li');
-  navItems.forEach(item => item.classList.remove('active'));
+  document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
   document.querySelector(`nav ul li[onclick="switchTab('${tab}')"]`).classList.add('active');
 }
 
-window.addEventListener('load', function () {
-  setTimeout(() => {
-    document.getElementById('loadingScreen').style.display = 'none';
-  }, 3000);
-
+window.addEventListener('load', () => {
   const canvas = document.getElementById('stars');
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+  const stars = Array.from({length: 150}, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    size: Math.random() * 2,
+    speed: Math.random() * 0.5 + 0.2
+  }));
 
-  const stars = [];
-  function createStar() {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      size: Math.random() * 2 + 0.5,
-      speed: Math.random() * 1 + 0.2,
-    });
-  }
-
-  function drawStars() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function animateStars() {
+    ctx.clearRect(0, 0, width, height);
     stars.forEach(star => {
       ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
-      ctx.fillStyle = '#fff';
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'white';
       ctx.fill();
       star.y += star.speed;
-      if (star.y > canvas.height) star.y = 0;
+      if (star.y > height) star.y = 0;
     });
+    requestAnimationFrame(animateStars);
   }
 
-  function animate() {
-    drawStars();
-    requestAnimationFrame(animate);
-  }
+  animateStars();
 
-  for (let i = 0; i < 200; i++) {
-    createStar();
-  }
-  animate();
+  window.addEventListener('resize', () => {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
 });
 </script>
 
