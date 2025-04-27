@@ -152,6 +152,7 @@
         <input type="text" id="login2FACode" placeholder="Security Code (optional)">
         <button id="loginBtn">Login</button>
         <div class="toggle" id="showRegister">Don't have an account? Register</div>
+        <div class="toggle" id="showForgotPassword">Forgot Password?</div>
       </div>
 
       <div class="form-side back">
@@ -175,15 +176,15 @@
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
     let stars = [];
-
+  
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-
+  
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-
+  
     function createStars() {
       stars = [];
       for (let i = 0; i < 200; i++) {
@@ -195,7 +196,7 @@
         });
       }
     }
-
+  
     function drawStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = 'white';
@@ -211,19 +212,20 @@
       }
       requestAnimationFrame(drawStars);
     }
-
+  
     createStars();
     drawStars();
-
+  
     const authContainer = document.getElementById('auth');
     const dashboard = document.getElementById('dashboard');
-
+  
     const showRegister = document.getElementById('showRegister');
     const showLogin = document.getElementById('showLogin');
-
+    const showForgotPassword = document.getElementById('showForgotPassword');
+  
     const loginBtn = document.getElementById('loginBtn');
     const registerBtn = document.getElementById('registerBtn');
-
+  
     function updateTitle() {
       if (dashboard.style.display === 'none') {
         document.title = authContainer.classList.contains('flipped') ? 'Whispr Cord | Register' : 'Whispr Cord | Login';
@@ -231,17 +233,42 @@
         document.title = 'Whispr Cord | Dashboard';
       }
     }
-
+  
     showRegister.addEventListener('click', () => {
       authContainer.classList.add('flipped');
       updateTitle();
     });
-
+  
     showLogin.addEventListener('click', () => {
       authContainer.classList.remove('flipped');
       updateTitle();
     });
-
+  
+    showForgotPassword.addEventListener('click', async () => {
+      const username = prompt('Enter your username:');
+      if (!username) return alert('Please enter a valid username.');
+  
+      const storedHash = localStorage.getItem('user_' + username);
+      const stored2FAKey = localStorage.getItem('user_' + username + '_2FAKey');
+      
+      if (!storedHash) {
+        return alert('User not found!');
+      }
+  
+      const securityCode = prompt('Enter your security code:');
+      if (securityCode !== stored2FAKey) {
+        return alert('Invalid security code!');
+      }
+  
+      const newPassword = prompt('Enter your new password:');
+      if (!newPassword) return alert('Password cannot be empty.');
+  
+      const hashedNewPassword = await hashPassword(newPassword);
+      localStorage.setItem('user_' + username, hashedNewPassword);
+  
+      alert('Your password has been successfully reset!');
+    });
+  
     async function hashPassword(password) {
       const encoder = new TextEncoder();
       const data = encoder.encode(password);
@@ -249,21 +276,21 @@
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-
+  
     loginBtn.addEventListener('click', async () => {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       const twoFactorCode = document.getElementById('login2FACode').value.trim();
-
+  
       if (!username || !password) {
         alert('Please fill all fields!');
         return;
       }
-
+  
       const hashedPassword = await hashPassword(password);
       const storedHash = localStorage.getItem('user_' + username);
       const stored2FAKey = localStorage.getItem('user_' + username + '_2FAKey');
-
+  
       if (storedHash === hashedPassword) {
         if (stored2FAKey) {
           if (twoFactorCode !== stored2FAKey) {
@@ -276,35 +303,35 @@
         alert('Invalid credentials!');
       }
     });
-
+  
     registerBtn.addEventListener('click', async () => {
       const username = document.getElementById('registerUsername').value.trim();
       const password = document.getElementById('registerPassword').value.trim();
       const twoFAKey = document.getElementById('register2FAKey').value.trim();
-
+  
       if (!username || !password) {
         alert('Please fill all fields!');
         return;
       }
-
+  
       if (localStorage.getItem('user_' + username)) {
         alert('User already exists!');
         return;
       }
-
+  
       const hashedPassword = await hashPassword(password);
       localStorage.setItem('user_' + username, hashedPassword);
-
+  
       if (twoFAKey) {
         localStorage.setItem('user_' + username + '_2FAKey', twoFAKey);
       }
-
+  
       alert('Registration successful! Please login.');
-
+  
       authContainer.classList.remove('flipped');
       updateTitle();
     });
-
+  
     document.getElementById('logoutBtn').addEventListener('click', () => {
       dashboard.style.display = 'none';
       authContainer.style.display = 'flex';
@@ -312,5 +339,5 @@
       updateTitle();
     });
   </script>
-</body>
-</html>
+  </body>
+  </html>
