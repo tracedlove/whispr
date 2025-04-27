@@ -17,6 +17,7 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      position: relative;
     }
 
     canvas#stars {
@@ -26,58 +27,49 @@
       z-index: -2;
       width: 100%;
       height: 100%;
-      background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
-    }
-
-    .loader {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 10, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      backdrop-filter: blur(5px);
-    }
-
-    .spinner {
-      width: 60px;
-      height: 60px;
-      border: 8px solid #5d00ff;
-      border-top: 8px solid transparent;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+      background: radial-gradient(ellipse at bottom, #555555 0%, #500064 100%);
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.05);
+      perspective: 1000px;
+      width: 350px;
+      height: 400px;
+      position: relative;
+    }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    .container.flipped .card {
+      transform: rotateY(180deg) rotateX(0deg);
+    }
+
+    .form-side {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background: rgba(0, 0, 0, 0.05);
       padding: 2rem;
       border-radius: 20px;
       backdrop-filter: blur(10px);
-      width: 350px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
-      animation: popIn 1s ease forwards;
-      opacity: 0;
-      transform: scale(0.8);
-      z-index: 1;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    @keyframes popIn {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+    .form-side.back {
+      transform: rotateY(180deg);
     }
 
     h2 {
-      text-align: center;
       margin-bottom: 1rem;
       font-weight: 600;
       letter-spacing: 1px;
@@ -89,15 +81,14 @@
       margin: 10px 0;
       border: none;
       border-radius: 10px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(0, 0, 0, 0.1);
       color: white;
       font-size: 1rem;
       transition: background 0.3s;
-      position: relative;
     }
 
     input:focus {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       outline: none;
     }
 
@@ -105,25 +96,23 @@
       width: 100%;
       padding: 10px;
       margin-top: 10px;
-      background: #5d00ff;
+      background: #fa60ed;
       border: none;
       border-radius: 10px;
       font-size: 1rem;
       color: white;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 8px 15px rgba(93,0,255,0.3);
-      transform: perspective(500px) translateZ(0);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
     }
 
     button:hover {
-      background: #7a1bff;
-      transform: perspective(500px) translateZ(10px);
-      box-shadow: 0 15px 25px rgba(122,27,255,0.6);
+      background: #fa60ed;
+      transform: scale(1.05);
+      box-shadow: 0 15px 25px rgba(154, 0, 185, 0.815);
     }
 
     .toggle {
-      text-align: center;
       margin-top: 10px;
       cursor: pointer;
       font-size: 0.9rem;
@@ -132,11 +121,7 @@
     }
 
     .toggle:hover {
-      color: #fff;
-    }
-
-    .hidden {
-      display: none;
+      color: #ffffff;
     }
 
     .dashboard {
@@ -144,6 +129,7 @@
       animation: fadeIn 1s ease forwards;
       opacity: 0;
       z-index: 1;
+      display: none;
     }
 
     @keyframes fadeIn {
@@ -151,43 +137,33 @@
         opacity: 1;
       }
     }
-
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink {
-      50% { border-color: transparent }
-    }
-
-    input::placeholder {
-      color: rgba(255,255,255,0.6);
-      letter-spacing: 1px;
-      animation: typing 2s steps(30, end) infinite alternate, blink 0.7s infinite;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid rgba(255,255,255,0.8);
-    }
   </style>
 </head>
 
 <body>
   <canvas id="stars"></canvas>
 
-  <div class="loader hidden" id="loader">
-    <div class="spinner"></div>
-  </div>
-
   <div class="container" id="auth">
-    <h2 id="formTitle">Login</h2>
-    <input type="text" id="username" placeholder="Username">
-    <input type="password" id="password" placeholder="Password">
-    <button id="submitBtn">Login</button>
-    <div class="toggle" id="toggleForm">Don't have an account? Register</div>
+    <div class="card">
+      <div class="form-side front">
+        <h2>Login</h2>
+        <input type="text" id="loginUsername" placeholder="Username">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button id="loginBtn">Login</button>
+        <div class="toggle" id="showRegister">Don't have an account? Register</div>
+      </div>
+
+      <div class="form-side back">
+        <h2>Register</h2>
+        <input type="text" id="registerUsername" placeholder="Username">
+        <input type="password" id="registerPassword" placeholder="Password">
+        <button id="registerBtn">Register</button>
+        <div class="toggle" id="showLogin">Already have an account? Login</div>
+      </div>
+    </div>
   </div>
 
-  <div class="dashboard hidden" id="dashboard">
+  <div class="dashboard" id="dashboard">
     <h2>Welcome to the Voice Engine Modifier</h2>
     <p>You're logged in!</p>
     <button id="logoutBtn">Logout</button>
@@ -237,6 +213,33 @@
     createStars();
     drawStars();
 
+    const authContainer = document.getElementById('auth');
+    const dashboard = document.getElementById('dashboard');
+
+    const showRegister = document.getElementById('showRegister');
+    const showLogin = document.getElementById('showLogin');
+
+    const loginBtn = document.getElementById('loginBtn');
+    const registerBtn = document.getElementById('registerBtn');
+
+    function updateTitle() {
+      if (dashboard.style.display === 'none') {
+        document.title = authContainer.classList.contains('flipped') ? 'Whispr Cord | Register' : 'Whispr Cord | Login';
+      } else {
+        document.title = 'Whispr Cord | Dashboard';
+      }
+    }
+
+    showRegister.addEventListener('click', () => {
+      authContainer.classList.add('flipped');
+      updateTitle();
+    });
+
+    showLogin.addEventListener('click', () => {
+      authContainer.classList.remove('flipped');
+      updateTitle();
+    });
+
     async function hashPassword(password) {
       const encoder = new TextEncoder();
       const data = encoder.encode(password);
@@ -245,40 +248,9 @@
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
 
-    const authContainer = document.getElementById('auth');
-    const dashboard = document.getElementById('dashboard');
-    const toggleForm = document.getElementById('toggleForm');
-    const formTitle = document.getElementById('formTitle');
-    const submitBtn = document.getElementById('submitBtn');
-    const loader = document.getElementById('loader');
-
-    let isRegistering = false;
-
-    function updateTitle() {
-      if (dashboard.classList.contains('hidden')) {
-        document.title = isRegistering ? 'Whispr Cord | Register' : 'Whispr Cord | Login';
-      } else {
-        document.title = 'Whispr Cord | Dashboard';
-      }
-    }
-
-    toggleForm.addEventListener('click', () => {
-      loader.classList.remove('hidden');
-
-      setTimeout(() => {
-        isRegistering = !isRegistering;
-        formTitle.textContent = isRegistering ? 'Register' : 'Login';
-        submitBtn.textContent = isRegistering ? 'Register' : 'Login';
-        toggleForm.textContent = isRegistering ? 'Already have an account? Login' : "Don't have an account? Register";
-        
-        updateTitle();
-        loader.classList.add('hidden');
-      }, 1000);
-    });
-
-    submitBtn.addEventListener('click', async () => {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+    loginBtn.addEventListener('click', async () => {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
 
       if (!username || !password) {
         alert('Please fill all fields!');
@@ -286,36 +258,47 @@
       }
 
       const hashedPassword = await hashPassword(password);
+      const storedHash = localStorage.getItem('user_' + username);
 
-      if (isRegistering) {
-        if (localStorage.getItem('user_' + username)) {
-          alert('User already exists!');
-          return;
-        }
-        localStorage.setItem('user_' + username, hashedPassword);
-        alert('Registration successful! Please login.');
-        isRegistering = false;
-        formTitle.textContent = 'Login';
-        submitBtn.textContent = 'Login';
-        toggleForm.textContent = "Don't have an account? Register";
-        updateTitle();
-      } else {
-        const storedHash = localStorage.getItem('user_' + username);
-        if (storedHash === hashedPassword) {
-          if (username === 'admin' && password === 'gta!564dsn$23k') {
-            window.location.href = 'admin';
-          } else {
-            window.location.href = 'dashboard';
-          }
+      if (storedHash === hashedPassword) {
+        if (username === 'admin' && password === 'gta!564dsn$23k') {
+          window.location.href = 'admin';
         } else {
-          alert('Invalid credentials!');
+          dashboard.style.display = 'block';
+          authContainer.style.display = 'none';
+          updateTitle();
         }
+      } else {
+        alert('Invalid credentials!');
       }
     });
 
+    registerBtn.addEventListener('click', async () => {
+      const username = document.getElementById('registerUsername').value.trim();
+      const password = document.getElementById('registerPassword').value.trim();
+
+      if (!username || !password) {
+        alert('Please fill all fields!');
+        return;
+      }
+
+      if (localStorage.getItem('user_' + username)) {
+        alert('User already exists!');
+        return;
+      }
+
+      const hashedPassword = await hashPassword(password);
+      localStorage.setItem('user_' + username, hashedPassword);
+      alert('Registration successful! Please login.');
+
+      authContainer.classList.remove('flipped');
+      updateTitle();
+    });
+
     document.getElementById('logoutBtn').addEventListener('click', () => {
-      dashboard.classList.add('hidden');
-      authContainer.classList.remove('hidden');
+      dashboard.style.display = 'none';
+      authContainer.style.display = 'flex';
+      authContainer.classList.remove('flipped');
       updateTitle();
     });
   </script>
