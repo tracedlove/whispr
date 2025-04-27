@@ -33,7 +33,7 @@
     .container {
       perspective: 1000px;
       width: 350px;
-      height: 400px;
+      height: 450px;
       position: relative;
     }
 
@@ -149,6 +149,7 @@
         <h2>Login</h2>
         <input type="text" id="loginUsername" placeholder="Username">
         <input type="password" id="loginPassword" placeholder="Password">
+        <input type="text" id="login2FACode" placeholder="Authenticator Code (If set one)">
         <button id="loginBtn">Login</button>
         <div class="toggle" id="showRegister">Don't have an account? Register</div>
       </div>
@@ -157,6 +158,7 @@
         <h2>Register</h2>
         <input type="text" id="registerUsername" placeholder="Username">
         <input type="password" id="registerPassword" placeholder="Password">
+        <input type="text" id="register2FAKey" placeholder="Authenticator Code (optional)">
         <button id="registerBtn">Register</button>
         <div class="toggle" id="showLogin">Already have an account? Login</div>
       </div>
@@ -251,6 +253,7 @@
     loginBtn.addEventListener('click', async () => {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
+      const twoFactorCode = document.getElementById('login2FACode').value.trim();
 
       if (!username || !password) {
         alert('Please fill all fields!');
@@ -259,8 +262,15 @@
 
       const hashedPassword = await hashPassword(password);
       const storedHash = localStorage.getItem('user_' + username);
+      const stored2FAKey = localStorage.getItem('user_' + username + '_2FAKey');
 
       if (storedHash === hashedPassword) {
+        if (stored2FAKey) {
+          if (twoFactorCode !== stored2FAKey) {
+            alert('Invalid 2FA code!');
+            return;
+          }
+        }
         window.location.href = 'dashboard';
       } else {
         alert('Invalid credentials!');
@@ -270,6 +280,7 @@
     registerBtn.addEventListener('click', async () => {
       const username = document.getElementById('registerUsername').value.trim();
       const password = document.getElementById('registerPassword').value.trim();
+      const twoFAKey = document.getElementById('register2FAKey').value.trim();
 
       if (!username || !password) {
         alert('Please fill all fields!');
@@ -283,6 +294,11 @@
 
       const hashedPassword = await hashPassword(password);
       localStorage.setItem('user_' + username, hashedPassword);
+
+      if (twoFAKey) {
+        localStorage.setItem('user_' + username + '_2FAKey', twoFAKey);
+      }
+
       alert('Registration successful! Please login.');
 
       authContainer.classList.remove('flipped');
