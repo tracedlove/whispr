@@ -137,6 +137,20 @@
         opacity: 1;
       }
     }
+
+    #viewCounter {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      color: white;
+      z-index: 999;
+      backdrop-filter: blur(6px);
+    }
   </style>
 </head>
 
@@ -172,19 +186,21 @@
     <button id="logoutBtn">Logout</button>
   </div>
 
+  <div id="viewCounter">👁️ Views: <span id="viewCount">...</span></div>
+
   <script>
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
     let stars = [];
-  
+
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
-  
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-  
+
     function createStars() {
       stars = [];
       for (let i = 0; i < 200; i++) {
@@ -196,7 +212,7 @@
         });
       }
     }
-  
+
     function drawStars() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = 'white';
@@ -212,20 +228,20 @@
       }
       requestAnimationFrame(drawStars);
     }
-  
+
     createStars();
     drawStars();
-  
+
     const authContainer = document.getElementById('auth');
     const dashboard = document.getElementById('dashboard');
-  
+
     const showRegister = document.getElementById('showRegister');
     const showLogin = document.getElementById('showLogin');
     const showForgotPassword = document.getElementById('showForgotPassword');
-  
+
     const loginBtn = document.getElementById('loginBtn');
     const registerBtn = document.getElementById('registerBtn');
-  
+
     function updateTitle() {
       if (dashboard.style.display === 'none') {
         document.title = authContainer.classList.contains('flipped') ? 'Whispr Audio Hook | Register' : 'Whispr Audio Hook | Login';
@@ -233,42 +249,42 @@
         document.title = 'Whispr Audio Hook | Dashboard';
       }
     }
-  
+
     showRegister.addEventListener('click', () => {
       authContainer.classList.add('flipped');
       updateTitle();
     });
-  
+
     showLogin.addEventListener('click', () => {
       authContainer.classList.remove('flipped');
       updateTitle();
     });
-  
+
     showForgotPassword.addEventListener('click', async () => {
       const username = prompt('Enter your username:');
       if (!username) return alert('Please enter a valid username.');
-  
+
       const storedHash = localStorage.getItem('user_' + username);
       const stored2FAKey = localStorage.getItem('user_' + username + '_2FAKey');
       
       if (!storedHash) {
         return alert('User not found!');
       }
-  
+
       const securityCode = prompt('Enter your security code:');
       if (securityCode !== stored2FAKey) {
         return alert('Invalid security code!');
       }
-  
+
       const newPassword = prompt('Enter your new password:');
       if (!newPassword) return alert('Password cannot be empty.');
-  
+
       const hashedNewPassword = await hashPassword(newPassword);
       localStorage.setItem('user_' + username, hashedNewPassword);
-  
+
       alert('Your password has been successfully reset!');
     });
-  
+
     async function hashPassword(password) {
       const encoder = new TextEncoder();
       const data = encoder.encode(password);
@@ -276,21 +292,21 @@
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     }
-  
+
     loginBtn.addEventListener('click', async () => {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
       const twoFactorCode = document.getElementById('login2FACode').value.trim();
-  
+
       if (!username || !password) {
         alert('Please fill all fields!');
         return;
       }
-  
+
       const hashedPassword = await hashPassword(password);
       const storedHash = localStorage.getItem('user_' + username);
       const stored2FAKey = localStorage.getItem('user_' + username + '_2FAKey');
-  
+
       if (storedHash === hashedPassword) {
         if (stored2FAKey) {
           if (twoFactorCode !== stored2FAKey) {
@@ -303,41 +319,69 @@
         alert('Invalid credentials!');
       }
     });
-  
+
     registerBtn.addEventListener('click', async () => {
       const username = document.getElementById('registerUsername').value.trim();
       const password = document.getElementById('registerPassword').value.trim();
       const twoFAKey = document.getElementById('register2FAKey').value.trim();
-  
+
       if (!username || !password) {
         alert('Please fill all fields!');
         return;
       }
-  
+
       if (localStorage.getItem('user_' + username)) {
         alert('User already exists!');
         return;
       }
-  
+
       const hashedPassword = await hashPassword(password);
       localStorage.setItem('user_' + username, hashedPassword);
-  
+
       if (twoFAKey) {
         localStorage.setItem('user_' + username + '_2FAKey', twoFAKey);
       }
-  
+
       alert('Registration successful! Please login.');
-  
+
       authContainer.classList.remove('flipped');
       updateTitle();
     });
-  
+
     document.getElementById('logoutBtn').addEventListener('click', () => {
       dashboard.style.display = 'none';
       authContainer.style.display = 'flex';
       authContainer.classList.remove('flipped');
       updateTitle();
     });
+
+    async function getIP() {
+      try {
+        const res = await fetch('https://ipinfo.io/json?token=<5533d542707168>');
+        const data = await res.json();
+        return data.ip;
+      } catch (e) {
+        console.error('Failed to fetch IP:', e);
+        return null;
+      }
+    }
+
+    async function updateViewCount() {
+      const ip = await getIP();
+      if (!ip) return;
+
+      const key = 'whispr_seen_ips';
+      let storedIPs = JSON.parse(localStorage.getItem(key)) || [];
+
+      if (!storedIPs.includes(ip)) {
+        storedIPs.push(ip);
+        localStorage.setItem(key, JSON.stringify(storedIPs));
+      }
+
+      document.getElementById('viewCount').textContent = storedIPs.length;
+    }
+
+    updateViewCount();
   </script>
-  </body>
-  </html>
+</body>
+</html>
