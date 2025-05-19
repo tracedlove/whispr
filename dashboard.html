@@ -3,417 +3,321 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Whispr Audio Hook Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <title>Nebula DLL Injector – README</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      height: 100%;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-      color: white;
+    :root {
+      --primary: #3b82f6;
+      --accent: #4facfe;
+      --text: #f1f5f9;
+      --bg: #0f172a;
+      --glass: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
     }
 
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      background: transparent;
+    [data-theme="light"] {
+      --primary: #2563eb;
+      --accent: #60a5fa;
+      --text: #1e293b;
+      --bg: #f8fafc;
+      --glass: rgba(0, 0, 0, 0.03);
+      --border: rgba(0, 0, 0, 0.1);
     }
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 999;
-    }
-
-    nav h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #6a00ff, #00d9ff);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      gap: 2rem;
-    }
-
-    nav ul li {
-      cursor: pointer;
-      font-weight: 600;
-      position: relative;
-    }
-
-    nav ul li::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #6a00ff, #00d9ff);
-      left: 0;
-      bottom: -5px;
-      transition: width 0.3s;
-    }
-
-    nav ul li:hover::after, nav ul li.active::after {
-      width: 100%;
-    }
-
-    section {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: 100vh;
-      padding: 4rem 2rem;
-      animation: fadeIn 0.8s ease forwards;
-    }
-
-    section.active {
-      display: flex;
-    }
-
-    h2 {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, #6a00ff, #00d9ff);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 2rem;
-    }
-
-    ul.features {
-      max-width: 800px;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 2rem;
-      box-shadow: 0 0 25px #6a00ff60;
-      text-align: left;
-    }
-
-    ul.features li {
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      line-height: 1.6;
-    }
-
-    .payment-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-
-    .payment-method {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      padding: 2rem;
-      border-radius: 20px;
-      width: 320px;
-      box-shadow: 0 0 25px #00d9ff60;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      transition: all 0.3s ease;
-    }
-
-    .payment-method:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 0 35px #00d9ff;
-    }
-
-    code {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      word-break: break-word;
-      display: inline-block;
-      margin-top: 0.5rem;
-    }
-
-    a.button {
-      margin-top: 2rem;
-      display: inline-block;
-      background: linear-gradient(90deg, #6a00ff, #00d9ff);
-      color: #0a0a0a;
-      padding: 0.75rem 2rem;
-      border-radius: 40px;
-      font-weight: bold;
-      text-decoration: none;
-      transition: background 0.3s;
-    }
-
-    a.button:hover {
-      opacity: 0.85;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.2);
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 50px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1.7;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
     }
-    
 
-    
-  </style>
+    h1, h2, h3 {
+      font-family: 'JetBrains Mono', monospace;
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-<style>
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 2rem;
-  }
-  
-  .feature-card {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 0 20px #5d00ff40;
-    transition: 0.3s ease;
-    animation: fadeInUp 1s ease both;
-  }
-  
-  .feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 0 30px #5d00ff80;
-  }
-  
-  .feature-card span {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: 1rem;
-  }
-  
-  .feature-card h3 {
-    font-size: 1.5rem;
-    background: linear-gradient(90deg, #5d00ff, #7a1bff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0.5rem;
-  }
-  
-  .feature-card p {
-    font-size: 1rem;
-    color: #ccc;
-    line-height: 1.6;
-  }
-  
-  @keyframes fadeInUp {
-    from {
+    h1 {
+      font-size: 3em;
+      background: linear-gradient(90deg, #60a5fa, #38bdf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(-20px);
+      animation: fadeInUp 1s ease forwards;
+    }
+
+    .container {
+      max-width: 960px;
+      width: 100%;
+      background: var(--glass);
+      padding: 40px;
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+      animation: fadeInUp 1s ease 0.5s forwards;
       opacity: 0;
       transform: translateY(20px);
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-  }
+
+    section {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-child {
+      border-bottom: none;
+    }
+
+    p {
+      margin-bottom: 12px;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 6px;
+      color: #facc15;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: linear-gradient(135deg, var(--primary), #2563eb);
+      color: white;
+      font-size: 0.85em;
+      border-radius: 8px;
+      margin-right: 8px;
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+    }
+
+    .highlight {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .warning {
+      background: rgba(239, 68, 68, 0.15);
+      padding: 12px;
+      border-left: 4px solid #ef4444;
+      border-radius: 6px;
+      color: #f87171;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9em;
+      color: #94a3b8;
+    }
+
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+      border-bottom: 1px dashed #93c5fd;
+      transition: 0.2s ease;
+    }
+
+    a:hover {
+      color: #facc15;
+      border-color: #facc15;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+
+      .container {
+        padding: 24px;
+      }
+    }
+
+    #toggleTheme {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text);
+      backdrop-filter: blur(8px);
+      transition: background 0.3s, color 0.3s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: transparent url('https://raw.githubusercontent.com/knyttneve/starfield/master/stars.png') repeat;
+      background-size: cover;
+      z-index: -1;
+      animation: moveStars 240s linear infinite;
+      opacity: 0.08;
+    }
+
+    @keyframes moveStars {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-500px, -1000px); }
+    }
+
+    #searchBar {
+      width: 100%;
+      max-width: 400px;
+      padding: 8px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: var(--glass);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
   </style>
-
 </head>
-
 <body>
 
-<canvas id="stars"></canvas>
+  <div class="stars"></div>
+  <button id="toggleTheme">Toggle Theme</button>
 
-<nav>
-  <h1>Whispr</h1>
-  <ul>
-    <li class="active" onclick="switchTab('features')">Features</li>
-    <li onclick="switchTab('purchase')">Purchase</li>
-    <li onclick="switchTab('customer')">Customer Panel</li>
-    <li onclick="switchTab('support')">Support</li>
-  </ul>
-</nav>
+  <input type="text" id="searchBar" placeholder="Search sections..." />
 
-<section id="features" class="active">
-  <h2>Features</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <h3>Authentication Login</h3>
-      <p>Secure login via KeyAuth with additional encryption.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Uncapped Opus</h3>
-      <p>Unlock full audio potential with a uncapped opus able to push the audio to its limits.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Gain Sliders, Bass Boost</h3>
-      <p>Fine-tune your voice and enhance gain & bass for premium sound control.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Remove Discord Voice Filters</h3>
-      <p>Remove highpass filters and automatically set clean settings.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Stream Proof, Trace Cleaner, USN Journal Cleanup</h3>
-      <p>Keep your activities private and untraceable.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Full Compatibility</h3>
-      <p>Supports Windows 10/11, Nvidia/AMD/Intel, x86/x64 systems.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Module Hooking (Universal)</h3>
-      <p>Integrate with various Discord modules without detection.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Customizable UI</h3>
-      <p>Change layout and colors to suit your personal style.</p>
-    </div>
-    <div class="feature-card">
-      <h3>FPS Optimized & FPS Counter</h3>
-      <p>Track performance with high FPS optimization built-in.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Browser Trace Cleaner</h3>
-      <p>Clean traces for Chrome, Brave, Edge, and Firefox browsers.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Bypasses Hook Breaker & Un-Natty Detection</h3>
-      <p>Advanced undetectable features for full stealth.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Screen Share & Camera Support</h3>
-      <p>Works while screen sharing or using your camera.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Trace Logs Control</h3>
-      <p>Stay private with the option to disable trace logging.</p>
-    </div>
-    <div class="feature-card">
-      <h3>100% Undetectable</h3>
-      <p>Fully undetectable and digitally signed (soon) with BAM bypass.</p>
-    </div>
-    <div class="feature-card">
-      <h3>Complete Privacy & Security</h3>
-      <p>Full stream-proof and trace-cleaning protection technologies.</p>
-    </div>
+  <h1>🚀 Nebula DLL Injector</h1>
+
+  <div class="container">
+
+    <section>
+      <h2>📘 Overview</h2>
+      <p><span class="highlight">Nebula DLL Injector</span> is a high-performance Windows utility built with <code>PyQt5</code>, <code>Flask</code>, <code>C#</code>, <code>Key-Auth.cc</code> to inject or eject DLLs from running processes. It offers a sleek UI, secure security client, and detailed logging.</p>
+    </section>
+
+    <section>
+      <h2>⚙️ Features</h2>
+      <ul>
+        <li>📌 Inject DLLs using a process PID</li>
+        <li>📤 Accepts both DLL file uploads and manual paths</li>
+        <li>🧵 Uses remote thread creation with <code>LoadLibraryA</code></li>
+        <li>🧽 Ejection via <code>FreeLibrary</code> and process module scan</li>
+        <li>🔐 Loader-based user authentication</li>
+        <li>🗂️ Temporary storage & cleanup for DLLs</li>
+        <li>📜 Log generation with timestamps</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>📁 Project Structure</h2>
+      <ul>
+        <li><code>main.py</code> – Launcher with GUI and backend thread</li>
+        <li><code>logs/</code> – Folder for injection and error logs</li>
+        <li><code>temp/</code> – Temporary DLL upload storage</li>
+        <li><code>HTML_CONTENT</code> – Embedded web-based UI inside PyQt</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🚀 Usage</h2>
+      <p>To run the application:<p>
+      <code>run loader.exe</code>
+      <p>It will:</p>
+      <ul>
+        <li>Prompt you to either register / login</li>
+        <li>If you register it will ask you for a username, password, license-key, email <code>(optional)</code></li>
+        <li>After registered it will say in the loader if you would like to set a <code>2FA</code> code on your account for extra security</li>
+        <li>To log in it will require your username, password, <code>2FA</code> code. but if you didn't set one you can click enter to skip it</li>
+        <li>After nebula is launched after registered/logged in it will proceed to</li>
+        <li>Start a Flask server on <code>localhost:5000</code></li>
+        <li>Launch a PyQt5 window rendering the embedded web interface</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>🧱 Dependencies</h2>
+      <ul>
+        <li><code>ctypes</code> (Standard Library)</li>
+        <li><code>Flask</code></li>
+        <li><code>PyQt5</code></li>
+        <li><code>winreg</code> (Windows Only)</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>⚠️ Disclaimer</h2>
+      <div class="warning">
+        This tool is intended for <strong>personal and ethical use</strong> only. Injecting any DLL's intended to break the law, harm others, etc. may result in a serious punishment.
+      </div>
+    </section>
+
+    <footer>
+      <p>Made with 💙 by Nebula | © 2025</p>
+    </footer>
+
   </div>
-</section>
 
+  <script>
+    const toggleButton = document.getElementById('toggleTheme');
+    const body = document.body;
 
-<section id="purchase">
-  <h2>Purchase</h2>
-  <div class="payment-grid">
-    <div class="payment-method">
-      <h3>Cash App</h3>
-      <p>Send $35 via CashApp. Add Discord or Email in notes.</p>
-      <a href="https://cash.app/$bloodytomb" target="_blank" class="button">Pay with CashApp</a>
-    </div>
-    <div class="payment-method">
-      <h3>Crypto (Ethereum)</h3>
-      <p>Send $35 via ETH to:</p>
-      <code>0xC83C78E7841a8f775259206Ccf544853a8d7473E</code>
-      <p>DM <strong>movetojapan</strong> on Discord with TXID proof.</p>
-    </div>
-  </div>
-</section>
+    if (localStorage.getItem('theme') === 'light') {
+      body.setAttribute('data-theme', 'light');
+    }
 
-<section id="customer">
-  <h2>Customer Panel</h2>
-  <p>Manage HWID/Password resets and more.</p>
-  <a href="https://keyauth.cc/panel/MoveToJapan/Whispr+Cord" target="_blank" class="button">Open Panel</a>
-</section>
-
-<section id="support">
-  <h2>Support</h2>
-  <p>Need help? Contact us via Email or Discord!</p>
-  <p>Email: <a href="mailto:tracedhearts@pm.me">tracedhearts@pm.me</a></p>
-  <p>Discord: <a href="https://discord.gg/bitrate" target="_blank">discord.gg/bitrate</a></p>
-  <a href="https://discord.gg/bitrate" target="_blank" class="button">Join Support Discord</a>
-</section>
-
-<script>
-function switchTab(tab) {
-  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-
-  document.querySelectorAll('nav ul li').forEach(li => li.classList.remove('active'));
-  document.querySelector(`nav ul li[onclick="switchTab('${tab}')"]`).classList.add('active');
-}
-
-window.addEventListener('load', () => {
-  const canvas = document.getElementById('stars');
-  const ctx = canvas.getContext('2d');
-  let width = canvas.width = window.innerWidth;
-  let height = canvas.height = window.innerHeight;
-  const stars = Array.from({length: 150}, () => ({
-    x: Math.random() * width,
-    y: Math.random() * height,
-    size: Math.random() * 2,
-    speed: Math.random() * 0.5 + 0.2
-  }));
-
-  function animateStars() {
-    ctx.clearRect(0, 0, width, height);
-    stars.forEach(star => {
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-      ctx.fillStyle = 'white';
-      ctx.fill();
-      star.y += star.speed;
-      if (star.y > height) star.y = 0;
+    toggleButton.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
     });
-    requestAnimationFrame(animateStars);
-  }
 
-  animateStars();
-
-  window.addEventListener('resize', () => {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-  });
-});
-</script>
+    document.getElementById('searchBar').addEventListener('input', function() {
+      const query = this.value.toLowerCase();
+      const sections = document.querySelectorAll('.container section');
+      sections.forEach(section => {
+        const textContent = section.textContent.toLowerCase();
+        section.style.display = textContent.includes(query) ? '' : 'none';
+      });
+    });
+  </script>
 
 </body>
 </html>
