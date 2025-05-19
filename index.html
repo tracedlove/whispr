@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Whispr Audio Hook | Login</title>
+  <title>Nebula | Login</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -137,20 +137,6 @@
         opacity: 1;
       }
     }
-
-    #viewCounter {
-      position: fixed;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 6px 12px;
-      border-radius: 12px;
-      font-family: 'Poppins', sans-serif;
-      font-size: 14px;
-      color: white;
-      z-index: 999;
-      backdrop-filter: blur(6px);
-    }
   </style>
 </head>
 
@@ -185,8 +171,6 @@
     <p>You're logged in!</p>
     <button id="logoutBtn">Logout</button>
   </div>
-
-  <div id="viewCounter">👁️ Views: <span id="viewCount">...</span></div>
 
   <script>
     const canvas = document.getElementById('stars');
@@ -244,9 +228,9 @@
 
     function updateTitle() {
       if (dashboard.style.display === 'none') {
-        document.title = authContainer.classList.contains('flipped') ? 'Whispr Audio Hook | Register' : 'Whispr Audio Hook | Login';
+        document.title = authContainer.classList.contains('flipped') ? 'Nebula | Register' : 'Nebula | Login';
       } else {
-        document.title = 'Whispr Audio Hook | Dashboard';
+        document.title = 'Nebula | Dashboard';
       }
     }
 
@@ -354,34 +338,6 @@
       authContainer.classList.remove('flipped');
       updateTitle();
     });
-
-    async function getIP() {
-      try {
-        const res = await fetch('https://ipinfo.io/json?token=<5533d542707168>');
-        const data = await res.json();
-        return data.ip;
-      } catch (e) {
-        console.error('Failed to fetch IP:', e);
-        return null;
-      }
-    }
-
-    async function updateViewCount() {
-      const ip = await getIP();
-      if (!ip) return;
-
-      const key = 'whispr_seen_ips';
-      let storedIPs = JSON.parse(localStorage.getItem(key)) || [];
-
-      if (!storedIPs.includes(ip)) {
-        storedIPs.push(ip);
-        localStorage.setItem(key, JSON.stringify(storedIPs));
-      }
-
-      document.getElementById('viewCount').textContent = storedIPs.length;
-    }
-
-    updateViewCount();
   </script>
 </body>
 </html>
