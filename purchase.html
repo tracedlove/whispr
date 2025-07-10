@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purchase Whispr Macro – Da-Hood Multi-Use Macro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #7c3aed;
+      --primary-light: #8b5cf6;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #ffffff;
+      --bg-dark: #f8fafc;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      --success: #10b981;
+      --crypto: #627eea;
+      --cashapp: #00d632;
+    }
+
+    [data-theme="dark"] {
+      --primary: #8b5cf6;
+      --primary-light: #7c3aed;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --bg: #0f172a;
+      --bg-dark: #1e293b;
+      --border: #334155;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    #toggleTheme {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .purchase-hero {
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .purchase-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .purchase-hero p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .pricing-card {
+      background: var(--bg-dark);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      max-width: 500px;
+      margin: 0 auto 3rem;
+      box-shadow: var(--shadow);
+    }
+
+    .pricing-card h2 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .price {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--text-light);
+    }
+
+    .payment-options {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+    }
+
+    .payment-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
+    }
+
+    .payment-btn.crypto {
+      background: var(--crypto);
+      color: white;
+    }
+
+    .payment-btn.cashapp {
+      background: var(--cashapp);
+      color: white;
+    }
+
+    .payment-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .payment-instructions {
+      display: none;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .payment-instructions.active {
+      display: block;
+    }
+
+    .payment-instructions h3 {
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .payment-instructions ol {
+      margin-left: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .payment-instructions li {
+      margin-bottom: 0.5rem;
+    }
+
+    .qr-code {
+      text-align: center;
+      margin: 1.5rem 0;
+    }
+
+    .qr-code img {
+      max-width: 200px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      color: white;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
+      margin-top: 1.5rem;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-next {
+      background: var(--success);
+    }
+
+    .features-list {
+      margin: 2rem 0;
+    }
+
+    .features-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .features-list i {
+      margin-right: 0.75rem;
+      color: var(--primary);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-light);
+    }
+
+    @media (max-width: 768px) {
+      .purchase-hero h1 {
+        font-size: 2rem;
+      }
+
+      .price {
+        font-size: 2.5rem;
+      }
+
+      .payment-options {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="dashboard" class="logo">Whispr</a>
+      <button id="toggleTheme">Toggle Theme</button>
+    </header>
+
+    <section class="purchase-hero">
+      <h1>Get Whispr Macro Now</h1>
+      <p>Unlock the full potential of your Da-Hood gameplay with our powerful, customizable macros.</p>
+    </section>
+
+    <div class="pricing-card">
+      <h2>Whispr Macro</h2>
+      <div class="price">$8 <span>one-time payment</span></div>
+      
+      <div class="payment-options">
+        <button class="payment-btn crypto" id="crypto-btn"><i class="fab fa-ethereum"></i> Pay with Crypto (ETH)</button>
+        <button class="payment-btn cashapp" id="cashapp-btn"><i class="fas fa-dollar-sign"></i> Pay with Cash App</button>
+      </div>
+
+      <!-- Crypto Instructions -->
+      <div class="payment-instructions" id="crypto-instructions">
+        <h3>How to Pay with Ethereum (ETH)</h3>
+        <ol>
+          <li>Send <strong>0.0045 ETH</strong> (or equivalent to $8) to:</li>
+          <li><code>0xa24aefc2bcBD08c87283F83e7920508a048b2500</code></li>
+          <li>Include your <strong>Discord username</strong> in the transaction notes.</li>
+          <li>Wait for blockchain confirmation (1-3 minutes).</li>
+        </ol>
+        <div class="qr-code">
+        </div>
+        <button class="btn btn-next" id="crypto-next"><i class="fab fa-discord"></i> I've Paid – Join Discord</button>
+      </div>
+
+      <!-- Cash App Instructions -->
+      <div class="payment-instructions" id="cashapp-instructions">
+        <h3>How to Pay with Cash App</h3>
+        <ol>
+          <li>Send <strong>$8</strong> to:</li>
+          <li>Cashtag: <code>$bloodytomb</code></li>
+          <li>Include your <strong>Discord username</strong> in the payment notes.</li>
+        </ol>
+        <div class="qr-code">
+          <p>Scan to send payment:</p>
+          <img src="https://media.discordapp.net/attachments/1344648391950471291/1392933990129729796/image.png?ex=6871565e&is=687004de&hm=fcf806a041a9d074f14b441abcc3d147dc6d143616fea745edef2e317bd6cae4&=&format=webp&quality=lossless" alt="Cash App QR Code">
+        </div>
+        <button class="btn btn-next" id="cashapp-next"><i class="fab fa-discord"></i> I've Paid – Join Discord</button>
+      </div>
+
+      <ul class="features-list">
+        <li><i class="fas fa-check"></i> Shooting Macro (Autoclick-like)</li>
+        <li><i class="fas fa-check"></i> Movement Macro (Hold-toggle-release)</li>
+        <li><i class="fas fa-check"></i> Safe Mode for any major malfunctions</li>
+        <li><i class="fas fa-check"></i> Lifetime Updates</li>
+      </ul>
+    </div>
+
+    <footer>
+      <p>© 2025 Whispr Macro. Not affiliated with Roblox or Da-Hood.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const toggleButton = document.getElementById('toggleTheme');
+    const body = document.body;
+
+    if (localStorage.getItem('theme') === 'dark') {
+      body.setAttribute('data-theme', 'dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Payment Options
+    const cryptoBtn = document.getElementById('crypto-btn');
+    const cashappBtn = document.getElementById('cashapp-btn');
+    const cryptoInstructions = document.getElementById('crypto-instructions');
+    const cashappInstructions = document.getElementById('cashapp-instructions');
+    const cryptoNext = document.getElementById('crypto-next');
+    const cashappNext = document.getElementById('cashapp-next');
+
+    cryptoBtn.addEventListener('click', () => {
+      cryptoInstructions.classList.add('active');
+      cashappInstructions.classList.remove('active');
+    });
+
+    cashappBtn.addEventListener('click', () => {
+      cashappInstructions.classList.add('active');
+      cryptoInstructions.classList.remove('active');
+    });
+
+    // Next Buttons (Discord)
+    cryptoNext.addEventListener('click', () => {
+      window.open('https://discord.gg/dNjCwKtCGd', '_blank');
+    });
+
+    cashappNext.addEventListener('click', () => {
+      window.open('https://discord.gg/dNjCwKtCGd', '_blank');
+    });
+  </script>
+</body>
+</html>
