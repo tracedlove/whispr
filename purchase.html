@@ -283,7 +283,6 @@
         <button class="payment-btn cashapp" id="cashapp-btn"><i class="fas fa-dollar-sign"></i> Pay with Cash App</button>
       </div>
 
-      <!-- Crypto Instructions -->
       <div class="payment-instructions" id="crypto-instructions">
         <h3>How to Pay with Ethereum (ETH)</h3>
         <ol>
@@ -297,7 +296,6 @@
         <button class="btn btn-next" id="crypto-next"><i class="fab fa-discord"></i> I've Paid – Join Discord</button>
       </div>
 
-      <!-- Cash App Instructions -->
       <div class="payment-instructions" id="cashapp-instructions">
         <h3>How to Pay with Cash App</h3>
         <ol>
@@ -317,6 +315,9 @@
         <li><i class="fas fa-check"></i> Movement Macro (Hold-toggle-release)</li>
         <li><i class="fas fa-check"></i> Safe Mode for any major malfunctions</li>
         <li><i class="fas fa-check"></i> Lifetime Updates</li>
+        <li><i class="fas fa-check"></i> User friendly interface with easy navigation</li>
+        <li><i class="fas fa-check"></i> Non bloated UI with optimization to ensure no performance decreases</li>
+        <li><i class="fas fa-check"></i> Compatible with any windows version 10+</li>
       </ul>
     </div>
 
@@ -326,7 +327,6 @@
   </div>
 
   <script>
-    // Theme Toggle
     const toggleButton = document.getElementById('toggleTheme');
     const body = document.body;
 
@@ -341,7 +341,6 @@
       localStorage.setItem('theme', newTheme);
     });
 
-    // Payment Options
     const cryptoBtn = document.getElementById('crypto-btn');
     const cashappBtn = document.getElementById('cashapp-btn');
     const cryptoInstructions = document.getElementById('crypto-instructions');
@@ -359,7 +358,6 @@
       cryptoInstructions.classList.remove('active');
     });
 
-    // Next Buttons (Discord)
     cryptoNext.addEventListener('click', () => {
       window.open('https://discord.gg/dNjCwKtCGd', '_blank');
     });
