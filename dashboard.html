@@ -2,322 +2,228 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nebula DLL Injector – README</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Whispr Macro – Da-Hood Multi-Use Macro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #3b82f6;
-      --accent: #4facfe;
-      --text: #f1f5f9;
-      --bg: #0f172a;
-      --glass: rgba(255, 255, 255, 0.05);
-      --border: rgba(255, 255, 255, 0.1);
+      --primary: #7c3aed;
+      --primary-light: #8b5cf6;
+      --text: #1e293b;
+      --text-light: #64748b;
+      --bg: #ffffff;
+      --bg-dark: #f8fafc;
+      --border: #e2e8f0;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     }
 
-    [data-theme="light"] {
-      --primary: #2563eb;
-      --accent: #60a5fa;
-      --text: #1e293b;
-      --bg: #f8fafc;
-      --glass: rgba(0, 0, 0, 0.03);
-      --border: rgba(0, 0, 0, 0.1);
+    [data-theme="dark"] {
+      --primary: #8b5cf6;
+      --primary-light: #7c3aed;
+      --text: #f1f5f9;
+      --text-light: #94a3b8;
+      --bg: #0f172a;
+      --bg-dark: #1e293b;
+      --border: #334155;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
       color: var(--text);
-      padding: 50px 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: 1.7;
-      scroll-behavior: smooth;
-      overflow-x: hidden;
+      line-height: 1.6;
       transition: background 0.3s, color 0.3s;
     }
 
-    h1, h2, h3 {
-      font-family: 'JetBrains Mono', monospace;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 3em;
-      background: linear-gradient(90deg, #60a5fa, #38bdf8);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(100, 149, 237, 0.2);
-      margin-bottom: 40px;
-      opacity: 0;
-      transform: translateY(-20px);
-      animation: fadeInUp 1s ease forwards;
-    }
-
     .container {
-      max-width: 960px;
-      width: 100%;
-      background: var(--glass);
-      padding: 40px;
-      border-radius: 16px;
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-      animation: fadeInUp 1s ease 0.5s forwards;
-      opacity: 0;
-      transform: translateY(20px);
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
     }
 
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    section {
-      margin-bottom: 40px;
-      padding-bottom: 20px;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 0;
       border-bottom: 1px solid var(--border);
     }
 
-    section:last-child {
-      border-bottom: none;
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-decoration: none;
     }
 
-    p {
-      margin-bottom: 12px;
+    nav {
+      display: flex;
+      gap: 1.5rem;
     }
 
-    ul {
-      padding-left: 20px;
-      margin-top: 10px;
+    nav a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
     }
 
-    li {
-      margin-bottom: 8px;
+    nav a:hover {
+      color: var(--primary);
     }
 
-    code {
-      font-family: 'JetBrains Mono', monospace;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 3px 8px;
-      border-radius: 6px;
-      color: #facc15;
+    .hero {
+      text-align: center;
+      padding: 4rem 0;
     }
 
-    .badge {
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .btn {
       display: inline-block;
-      padding: 6px 12px;
-      background: linear-gradient(135deg, var(--primary), #2563eb);
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
       color: white;
-      font-size: 0.85em;
-      border-radius: 8px;
-      margin-right: 8px;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-    }
-
-    .highlight {
-      color: #38bdf8;
       font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--shadow);
     }
 
-    .warning {
-      background: rgba(239, 68, 68, 0.15);
-      padding: 12px;
-      border-left: 4px solid #ef4444;
-      border-radius: 6px;
-      color: #f87171;
-      margin-top: 10px;
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(124, 58, 237, 0.2);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin: 4rem 0;
+    }
+
+    .feature {
+      background: var(--bg-dark);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .feature h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .feature p {
+      color: var(--text-light);
     }
 
     footer {
       text-align: center;
-      margin-top: 60px;
-      font-size: 0.9em;
-      color: #94a3b8;
-    }
-
-    a {
-      color: #93c5fd;
-      text-decoration: none;
-      border-bottom: 1px dashed #93c5fd;
-      transition: 0.2s ease;
-    }
-
-    a:hover {
-      color: #facc15;
-      border-color: #facc15;
-    }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2em;
-      }
-
-      .container {
-        padding: 24px;
-      }
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      color: var(--text-light);
     }
 
     #toggleTheme {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--glass);
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 8px;
+      background: none;
+      border: none;
+      color: var(--text-light);
       cursor: pointer;
-      color: var(--text);
-      backdrop-filter: blur(8px);
-      transition: background 0.3s, color 0.3s;
-      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 500;
     }
 
-    .stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 200%;
-      height: 200%;
-      background: transparent url('https://raw.githubusercontent.com/knyttneve/starfield/master/stars.png') repeat;
-      background-size: cover;
-      z-index: -1;
-      animation: moveStars 240s linear infinite;
-      opacity: 0.08;
-    }
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.25rem;
+      }
 
-    @keyframes moveStars {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(-500px, -1000px); }
-    }
+      .hero p {
+        font-size: 1rem;
+      }
 
-    #searchBar {
-      width: 100%;
-      max-width: 400px;
-      padding: 8px;
-      margin-bottom: 20px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background-color: var(--glass);
-      color: var(--text);
-      font-family: 'JetBrains Mono', monospace;
+      .features {
+        grid-template-columns: 1fr;
+      }
     }
-
   </style>
 </head>
 <body>
-
-  <div class="stars"></div>
-  <button id="toggleTheme">Toggle Theme</button>
-
-  <input type="text" id="searchBar" placeholder="Search sections..." />
-
-  <h1>🚀 Nebula DLL Injector</h1>
-
   <div class="container">
+    <header>
+      <a href="#" class="logo">Whispr</a>
+      <nav>
+        <button id="toggleTheme">Toggle Theme</button>
+      </nav>
+    </header>
 
-    <section>
-      <h2>📘 Overview</h2>
-      <p><span class="highlight">Nebula DLL Injector</span> is a high-performance Windows utility built with <code>PyQt5</code>, <code>Flask</code>, <code>C#</code>, <code>Key-Auth.cc</code> to inject or eject DLLs from running processes. It offers a sleek UI, secure security client, and detailed logging.</p>
+    <section class="hero">
+      <h1>Enhance Your Da-Hood Experience</h1>
+      <p>Whispr Macro is the ultimate tool for Roblox Da-Hood players, offering customizable macros for shooting and movement.</p>
+      <a href="purchase.html" class="btn">Buy Now – $8</a>
     </section>
 
-    <section>
-      <h2>⚙️ Features</h2>
-      <ul>
-        <li>📌 Inject DLLs using a process PID</li>
-        <li>📤 Accepts both DLL file uploads and manual paths</li>
-        <li>🧵 Uses remote thread creation with <code>LoadLibraryA</code></li>
-        <li>🧽 Ejection via <code>FreeLibrary</code> and process module scan</li>
-        <li>🔐 Loader-based user authentication</li>
-        <li>🗂️ Temporary storage & cleanup for DLLs</li>
-        <li>📜 Log generation with timestamps</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>📁 Project Structure</h2>
-      <ul>
-        <li><code>main.py</code> – Launcher with GUI and backend thread</li>
-        <li><code>logs/</code> – Folder for injection and error logs</li>
-        <li><code>temp/</code> – Temporary DLL upload storage</li>
-        <li><code>HTML_CONTENT</code> – Embedded web-based UI inside PyQt</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>🚀 Usage</h2>
-      <p>To run the application:<p>
-      <code>run loader.exe</code>
-      <p>It will:</p>
-      <ul>
-        <li>Prompt you to either register / login</li>
-        <li>If you register it will ask you for a username, password, license-key, email <code>(optional)</code></li>
-        <li>After registered it will say in the loader if you would like to set a <code>2FA</code> code on your account for extra security</li>
-        <li>To log in it will require your username, password, <code>2FA</code> code. but if you didn't set one you can click enter to skip it</li>
-        <li>After nebula is launched after registered/logged in it will proceed to</li>
-        <li>Start a Flask server on <code>localhost:5000</code></li>
-        <li>Launch a PyQt5 window rendering the embedded web interface</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>🧱 Dependencies</h2>
-      <ul>
-        <li><code>ctypes</code> (Standard Library)</li>
-        <li><code>Flask</code></li>
-        <li><code>PyQt5</code></li>
-        <li><code>winreg</code> (Windows Only)</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>⚠️ Disclaimer</h2>
-      <div class="warning">
-        This tool is intended for <strong>personal and ethical use</strong> only. Injecting any DLL's intended to break the law, harm others, etc. may result in a serious punishment.
+    <section id="features" class="features">
+      <div class="feature">
+        <h3>🔫 Shooting Macro</h3>
+        <p>Toggle an autoclick-like macro with adjustable delays and custom keybindings for seamless gameplay.</p>
+      </div>
+      <div class="feature">
+        <h3>🏃 Movement Macro</h3>
+        <p>Move faster with a hold-toggle-release macro, fully customizable to your playstyle.</p>
+      </div>
+      <div class="feature">
+        <h3>⚡ Settings & Safety</h3>
+        <p>Safe mode, unhook macros, and auto-launch options to keep your experience smooth and secure.</p>
       </div>
     </section>
 
     <footer>
-      <p>Made with 💙 by Nebula | © 2025</p>
+      <p>© 2025 Whispr Macro. Not affiliated with Roblox or Da-Hood.</p>
     </footer>
-
   </div>
 
   <script>
     const toggleButton = document.getElementById('toggleTheme');
     const body = document.body;
 
-    if (localStorage.getItem('theme') === 'light') {
-      body.setAttribute('data-theme', 'light');
+    if (localStorage.getItem('theme') === 'dark') {
+      body.setAttribute('data-theme', 'dark');
     }
 
     toggleButton.addEventListener('click', () => {
       const currentTheme = body.getAttribute('data-theme');
-      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       body.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
     });
-
-    document.getElementById('searchBar').addEventListener('input', function() {
-      const query = this.value.toLowerCase();
-      const sections = document.querySelectorAll('.container section');
-      sections.forEach(section => {
-        const textContent = section.textContent.toLowerCase();
-        section.style.display = textContent.includes(query) ? '' : 'none';
-      });
-    });
   </script>
-
 </body>
 </html>
